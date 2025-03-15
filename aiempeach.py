@@ -4,17 +4,8 @@ import sys
 import argparse
 from openai import OpenAI
 
-def main():
-    parser = argparse.ArgumentParser(description="aiempeach 工具：调用 deepseek ai 接口发送问题")
-    parser.add_argument("prompt", nargs="*", help="你的提问内容")
-    args = parser.parse_args()
 
-    # 如果命令行中未传入提问内容，则提示用户输入
-    if args.prompt:
-        user_input = " ".join(args.prompt)
-    else:
-        user_input = input("请输入你的提问: ")
-
+def generate_response(user_input):
     # 从环境变量读取 API 密钥
     api_key = os.getenv("DEEPSEEK_API_KEY")
     if not api_key:
@@ -40,6 +31,30 @@ def main():
 
     for chunk in response:
         print(chunk.choices[0].delta.content, end="", flush=True)
+    print()
+
+def main():
+    # parser = argparse.ArgumentParser(description="aiempeach 工具：调用 deepseek ai 接口发送问题")
+    # parser.add_argument("prompt", nargs="*", help="你的提问内容")
+    # args = parser.parse_args()
+
+    # # 如果命令行中未传入提问内容，则提示用户输入
+    # if args.prompt:
+    #     user_input = " ".join(args.prompt)
+    # else:
+    #     user_input = input("请输入你的问题：")
+
+    if sys.stdin.isatty():
+        print("输入问题：(按Ctrl+D结束输入)")
+    
+    user_input = sys.stdin.read().strip()
+
+
+
+
+    print(user_input)
+    # generate_response(user_input) 
+
 
         
 if __name__ == "__main__":
