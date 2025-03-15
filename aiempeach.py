@@ -33,31 +33,38 @@ def main():
         print("错误：请先设置环境变量 DEEPSEEK_API_KEY")
         sys.exit(1)
     client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
-    messages = [{"role": "system", "content": "You are a helpful assistant"}]
-    while True:
-        assistantOuput = ""
-        if sys.stdin.isatty():
-            print("输入问题：(按Ctrl+D结束输入)")
-        user_input = sys.stdin.read().strip()
-        # print(user_input)
-        messages.append({"role": "user", "content": user_input})
+    messages = [{"role": "system", "content": "你是计算机学生的好助手，并且始终用中文回答问题"}]
+    try:
+        while True:
+            assistantOuput = ""
+            if sys.stdin.isatty():
+                print("输入问题：(按Ctrl+D结束输入)")
+            user_input = sys.stdin.read().strip()
+            # print(user_input)
+            messages.append({"role": "user", "content": user_input})
 
-        response = client.chat.completions.create(
-        model="deepseek-chat", # v3
-        # model = "deepseek-reasoner" # r1
-        # messages=[
-        #     {"role": "system", "content": "You are a helpful assistant"},
-        #     {"role": "user", "content": user_input},
-        # ],
-        messages=messages,
-        stream=True
-        )
-        # print(response.choices[0].message.content) # 无法处理流式输出
-        for chunk in response:
-            assistantOuput += chunk.choices[0].delta.content
-            print(chunk.choices[0].delta.content, end="", flush=True)
+            print()
+            print("deepseek-v3:")
+
+            response = client.chat.completions.create(
+            model="deepseek-chat", # v3
+            # model = "deepseek-reasoner" # r1
+            messages=messages,
+            stream=True
+            )
+
+            # 处理非流式输出
+            # print(response.choices[0].message.content) 
+
+            # 处理流式输出
+            for chunk in response:
+                assistantOuput += chunk.choices[0].delta.content
+                print(chunk.choices[0].delta.content, end="", flush=True)
+            print()
+            messages.append({"role": "assistant", "content": assistantOuput})
+    
+    except KeyboardInterrupt:
         print()
-        messages.append({"role": "assistant", "content": assistantOuput})
         
         
 if __name__ == "__main__":
