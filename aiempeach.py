@@ -32,11 +32,15 @@ def main():
             {"role": "system", "content": "You are a helpful assistant"},
             {"role": "user", "content": user_input},
         ],
-        stream=False
+        stream=True
     )
 
     # 输出 deepseek 的回复
-    print(response.choices[0].message.content)
+    # print(response.choices[0].message.content) # 无法处理流式输出
 
+    for chunk in response:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+
+        
 if __name__ == "__main__":
     main()
