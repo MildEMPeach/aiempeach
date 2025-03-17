@@ -12,7 +12,7 @@ client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
 def generate_message(user_input):
     messages.append({"role": "user", "content": user_input})
 
-def generate_response(model="deepseek-chat"):
+def generate_response(model):
     return client.chat.completions.create(
         model=model,
         messages=messages,
@@ -42,11 +42,23 @@ def main():
         sys.exit(1)
     
     # first query
-   
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-q", "--question", nargs="?", help="Addtional question")
+    # parser.add_argument("-f", "--file", nargs="*",help="Additional file(s)")
+    parser.add_argument("-m", "--model", default="deepseek-chat", help="Change model to 'deepseek-reasoner, default is 'deepseek-chat'")
+    args = parser.parse_args()
+    
+    user_input = ""
+
     if sys.stdin.isatty():
-        print("What can I help you with?") 
-    generate_message(sys.stdin.read().strip())
-    print_response(generate_response())
+        print("What can I help you with?")
+    user_input += sys.stdin.read().strip()
+
+    if args.question:
+        user_input += " " + args.question
+    
+    generate_message(user_input)
+    print_response(generate_response(args.model))
 
     # redirect stdin
     sys.stdin.close()
@@ -61,7 +73,7 @@ def main():
             if sys.stdin.isatty():
                 print("Any other questions?")
             generate_message(sys.stdin.read().strip())
-            print_response(generate_response())
+            print_response(generate_response(args.model))
     except KeyboardInterrupt:
         print()
         print("AIEMPEACH EXIT")
