@@ -4,20 +4,6 @@ import sys
 import argparse
 from openai import OpenAI
 
-
-# def generate_response(user_input, messages):
-
-    # 使用 deepseek 的接口地址初始化 OpenAI 客户端
-    
-
-    # 调用对话 API
-
-
-    # 输出 deepseek 的回复
-    
-
-
-
 def main():
     # parser = argparse.ArgumentParser(description="aiempeach 工具：调用 deepseek ai 接口发送问题")
     # parser.add_argument("prompt", nargs="*", help="你的提问内容")
@@ -60,6 +46,7 @@ def main():
             for chunk in response:
                 assistantOuput += chunk.choices[0].delta.content
                 print(chunk.choices[0].delta.content, end="", flush=True)
+            print()
             print()
             messages.append({"role": "assistant", "content": assistantOuput})
     
