@@ -28,8 +28,9 @@ def print_response(response):
     # print(response.choices[0].message.content) 
     # IF stream=True
     for chunk in response:
-        assistantOutput += chunk.choices[0].delta.content
-        print(chunk.choices[0].delta.content, end='', flush=True)
+        if chunk.choices[0].delta.content != None:
+            assistantOutput += chunk.choices[0].delta.content
+            print(chunk.choices[0].delta.content, end='', flush=True)
     print()
     print()
     # Prepare for next query
