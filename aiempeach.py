@@ -20,9 +20,9 @@ def generate_response(model):
     )
 
 
-def print_response(response):
+def print_response(response, model):
     print()
-    print("deepseek-v3:")
+    print(model + ":")
     assistantOutput = ""
     # IF stream=False
     # print(response.choices[0].message.content) 
@@ -59,7 +59,7 @@ def main():
         user_input += " " + args.question
     
     generate_message(user_input)
-    print_response(generate_response(args.model))
+    print_response(generate_response(args.model), args.model)
 
     # redirect stdin
     sys.stdin.close()
@@ -74,7 +74,7 @@ def main():
             if sys.stdin.isatty():
                 print("Any other questions?")
             generate_message(sys.stdin.read().strip())
-            print_response(generate_response(args.model))
+            print_response(generate_response(args.model), args.model)
     except KeyboardInterrupt:
         print()
         print("AIEMPEACH EXIT")
