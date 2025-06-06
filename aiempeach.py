@@ -2,6 +2,8 @@ import sys
 from langchain_deepseek import ChatDeepSeek
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from typing import List, Any
+import re
+import os
 
 class AIEmpeach:
     def __init__(self, api_key: str, model: str = "deepseek-chat"):
@@ -68,6 +70,10 @@ class AIEmpeach:
                 # Check if the user input is empty
                 if not user_input:
                     continue
+                
+                # Substitute @file("filename") for contents of file
+                user_input = self.process_file_input(user_input)
+                # print(user_input)
 
                 print("\n🤖: ", end = "")
                 # Check if the user input is exit, quit, q
@@ -85,7 +91,34 @@ class AIEmpeach:
             except EOFError:
                 print("EOFError, Bye!")
                 break
-                
+    
+    def process_file_input(self, user_input):
+        """Deal with the file input form @file('filename') or @file("filename")"""
+        file_pattern = r"@file\(['\"]([^'\"]+)['\"]\)"
+        file_list = []
+
+        def replace_file_function(match):
+            filepath = match.group(1)
+            file_list.append(filepath)
+            return filepath
+
+        user_input = re.sub(file_pattern, replace_file_function, user_input)
+
+        for filepath in file_list:
+            user_input += self.read_file_content(filepath)
+
+        return user_input
+
+    def read_file_content(self, filepath):
+        if not os.path.isabs(filepath):
+            filepath = os.path.join(os.getcwd(), filepath)
+        
+        with open(filepath, 'r', encoding='utf-8') as f:
+            content = f.read()
+            # print(f"\n\nThe contents of the file {os.path.basename(filepath)}:\n{content}\n")
+            return f"\n\nThe contents of the file {os.path.basename(filepath)}:\n{content}\n"
+        
+
     def get_content_and_print_stream(self):
         """Get and Print the content from the LLM"""
         print("", end="", flush=True)
