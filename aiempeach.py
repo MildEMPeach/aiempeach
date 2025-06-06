@@ -17,7 +17,8 @@ class AIEmpeach:
         # Initialize the LLM
         self.llm = ChatDeepSeek(
             model = self.model,
-            api_key = self.api_key
+            api_key = self.api_key,
+            streaming = True
         )
 
         # Initialize the conversation history
@@ -76,10 +77,8 @@ class AIEmpeach:
                     break
                 
                 self.add_to_conversation_history("human", user_input)
-                response = self.get_response_stream()
-                self.add_to_conversation_history("assistant", response.content)
-                
-                print(response.content)
+                response_content = self.get_content_and_print_stream()
+                self.add_to_conversation_history("assistant", response_content)
 
             except KeyboardInterrupt:
                 print("Bye!")
@@ -88,7 +87,12 @@ class AIEmpeach:
                 print("EOFError, Bye!")
                 break
                 
-    def get_response_stream(self):
-        """Get and Print the response from the LLM"""
-        response = self.llm.invoke(self.conversation_history)
-        return response
+    def get_content_and_print_stream(self):
+        """Get and Print the content from the LLM"""
+        print("", end="", flush=True)
+        response_content = ""
+        for chunk in self.llm.stream(self.conversation_history):
+            if chunk.content:
+                print(chunk.content, end="", flush=True)
+            response_content += chunk.content
+        return response_content
