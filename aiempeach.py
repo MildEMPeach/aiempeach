@@ -49,17 +49,27 @@ class AIEmpeach:
         print("💬 And Let's chat!(Type 'exit', 'quit', 'q' to quit)")
         print("=" * 50)
 
+        input_from_pipe = ""
+        if not sys.stdin.isatty():
+            input_from_pipe = sys.stdin.read().strip()
+            print("Detect Contents from the pipe...")
+            # Redirect standard input from the terminal
+            sys.stdin = open("/dev/tty", 'r')
+        
         while True:
             try:
-                
                 user_input = input("\n😊: ").strip()
-                
+
+                # If there is any input from the pipe, add the input from the pipe to the user input.
+                if input_from_pipe:
+                    user_input += input_from_pipe
+                    input_from_pipe = ""
+
                 # Check if the user input is empty
                 if not user_input:
                     continue
-                
-                print("\n🤖: ", end = "")
 
+                print("\n🤖: ", end = "")
                 # Check if the user input is exit, quit, q
                 if user_input.lower() in ['exit', 'quit', 'q']:
                     print("Bye!")
@@ -71,16 +81,13 @@ class AIEmpeach:
                 
                 print(response.content)
 
-
             except KeyboardInterrupt:
+                print("Bye!")
                 break
             except EOFError:
+                print("EOFError, Bye!")
                 break
                 
-                
-
-
-
     def get_response_stream(self):
         """Get and Print the response from the LLM"""
         response = self.llm.invoke(self.conversation_history)
