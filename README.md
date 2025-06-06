@@ -1,136 +1,80 @@
 # 🤖 AIEmpeach
 
-一个基于 DeepSeek API 的智能命令行助手，让 AI 成为你终端中的得力伙伴。
+基于DeepSeek API的智能命令行助手，支持多种交互方式和文件处理功能。
 
-## ✨ 功能特点
+## 特性
 
-- 🗣️ **多轮对话** - 支持连续提问，保持上下文记忆
-- 🔄 **管道支持** - 无缝集成 Unix 管道，分析文件内容或命令输出
-- 🧠 **模型选择** - 支持 DeepSeek Chat 和 DeepSeek Reasoner 模型
-- 🌊 **流式输出** - 实时显示 AI 回复，体验更流畅
-- 🇨🇳 **中文优化** - 专为中文用户设计，回答更贴合国内使用习惯
+- 基于DeepSeek API的智能问答
+- 流式输出，实时显示回答
+- 支持文件内容读取和处理
+- 支持管道输入
+- 支持多种模型选择
+- 中文优化的智能助手
 
-## 🚀 快速开始
+## 快速开始
 
-### 前置要求
+### 环境要求
 
 - Python 3.6+
 - DeepSeek API Key
 
-### 安装依赖
+### 快速安装
 
 ```bash
-pip install -r requirements.txt
+pip install -e .
 ```
 
-### 配置 API Key
+### 配置API Key
 
-设置环境变量：
+创建 `.env` 文件并添加你的DeepSeek API Key：
+
+```env
+DEEPSEEK_API_KEY=your_deepseek_api_key_here
+```
+
+## 使用方法
+
+### 基本使用
 
 ```bash
-# Linux/macOS/WSL
-export DEEPSEEK_API_KEY="your_api_key_here"
+# 直接运行聊天模式
+aiempeach
 
-# Windows PowerShell  
-$env:DEEPSEEK_API_KEY="your_api_key_here"
-
-# Windows CMD
-set DEEPSEEK_API_KEY=your_api_key_here
+# 指定模型
+aiempeach -m deepseek-chat
+aiempeach -m deepseek-reasoner
 ```
 
-或创建 `.env` 文件：
-```
-DEEPSEEK_API_KEY=your_api_key_here
-```
-
-## 💻 使用方法
-
-### 基础对话
+### 管道输入
 
 ```bash
-python aiempeach.py
+# 通过管道输入文件内容
+cat file.txt | aiempeach
+
+# 结合其他命令
+echo "解释这段代码" | aiempeach
 ```
 
-直接启动交互式对话模式，支持：
-- ✅ **真正的流式输出** - AI 回复逐字显示
-- ✅ **多轮对话记忆** - 自动保持上下文
-- ✅ **优雅退出** - 支持 `exit`, `quit`, `q`, `Ctrl+C`
+### 文件引用
 
-### 管道模式
+在聊天过程中，你可以使用 `@file("filename")` 语法来引用文件内容：
 
-分析文件内容：
-```bash
-cat your_file.txt | python aiempeach.py -q "请分析这个文件的内容"
+```
+😊: 请分析这个文件 @file("main.py")
 ```
 
-分析命令输出：
-```bash
-ls -la | python aiempeach.py -q "解释这些文件的用途"
-```
+## 命令行选项
 
-检查代码：
-```bash
-cat script.py | python aiempeach.py -q "这段代码有什么问题吗？"
-```
-
-### 模型选择
-
-使用推理模型：
-```bash
-python aiempeach.py -m deepseek-reasoner
-```
-
-## 📖 命令行参数
-
-| 参数 | 简写 | 描述 | 默认值 |
+| 选项 | 简写 | 描述 | 默认值 |
 |------|------|------|--------|
-| `--question` | `-q` | 附加问题（配合管道使用） | 无 |
-| `--model` | `-m` | 选择模型 | `deepseek-chat` |
+| `--model` | `-m` | 选择使用的模型 | `deepseek-chat` |
 
 ### 可用模型
 
-- `deepseek-chat` - 通用对话模型，响应速度快
-- `deepseek-reasoner` - 推理模型，逻辑分析能力更强
+- `deepseek-chat`: 通用对话模型
+- `deepseek-reasoner`: 推理增强模型
 
-## 🎯 使用场景
+## 使用技巧
 
-- **代码审查**: 快速分析代码质量和潜在问题
-- **日志分析**: 解读系统日志和错误信息
-- **文档理解**: 快速理解技术文档和配置文件
-- **学习助手**: 解答编程和技术问题
-- **数据分析**: 分析结构化数据和报告
-
-## 🔧 开发状态
-
-### 已完成功能 ✅
-- [x] 多轮对话支持
-- [x] 流式输出实现
-- [x] 管道输入处理 (`-q` 参数)
-- [x] 模型选择功能 (`-m` 参数)
-- [x] 优雅的错误处理和退出
-- [x] 完整的命令行参数支持
-
-### 计划中功能 🚧
-- [ ] 多轮对话中的文件读取
-- [ ] 修复重定向输出的 stdout 重置问题
-- [ ] 对话历史保存和恢复
-- [ ] 配置文件支持
-
-## ⚠️ 注意事项
-
-1. 确保已正确设置 `DEEPSEEK_API_KEY` 环境变量
-2. 网络连接需要能够访问 DeepSeek API
-3. 使用 `Ctrl+C` 可以随时退出程序
-4. 流式输出需要终端支持实时字符显示
-
-## 📚 详细文档
-
-更多使用技巧和高级功能请参考 [USAGE.md](USAGE.md)
-
-## 🤝 贡献
-
-欢迎提交 Issue 和 Pull Request 来帮助改进这个项目！
-
----
-
-> 💡 **提示**: 将 `aiempeach.py` 添加到系统 PATH 中，就可以在任何地方直接使用 `aiempeach` 命令了！
+1. **文件分析**: 使用 `@file("path/to/file")` 语法可以让AI分析任何文本文件
+2. **管道处理**: 配合Linux/Unix命令行工具，可以处理复杂的文本流
