@@ -20,7 +20,7 @@
 ### 安装依赖
 
 ```bash
-pip install openai
+pip install -r requirements.txt
 ```
 
 ### 配置 API Key
@@ -28,9 +28,19 @@ pip install openai
 设置环境变量：
 
 ```bash
-# Linux/macOS
+# Linux/macOS/WSL
 export DEEPSEEK_API_KEY="your_api_key_here"
 
+# Windows PowerShell  
+$env:DEEPSEEK_API_KEY="your_api_key_here"
+
+# Windows CMD
+set DEEPSEEK_API_KEY=your_api_key_here
+```
+
+或创建 `.env` 文件：
+```
+DEEPSEEK_API_KEY=your_api_key_here
 ```
 
 ## 💻 使用方法
@@ -41,7 +51,10 @@ export DEEPSEEK_API_KEY="your_api_key_here"
 python aiempeach.py
 ```
 
-直接启动交互式对话模式。
+直接启动交互式对话模式，支持：
+- ✅ **真正的流式输出** - AI 回复逐字显示
+- ✅ **多轮对话记忆** - 自动保持上下文
+- ✅ **优雅退出** - 支持 `exit`, `quit`, `q`, `Ctrl+C`
 
 ### 管道模式
 
@@ -91,23 +104,32 @@ python aiempeach.py -m deepseek-reasoner
 
 ### 已完成功能 ✅
 - [x] 多轮对话支持
+- [x] 流式输出实现
 - [x] 管道输入处理 (`-q` 参数)
 - [x] 模型选择功能 (`-m` 参数)
+- [x] 优雅的错误处理和退出
+- [x] 完整的命令行参数支持
 
 ### 计划中功能 🚧
 - [ ] 多轮对话中的文件读取
 - [ ] 修复重定向输出的 stdout 重置问题
+- [ ] 对话历史保存和恢复
+- [ ] 配置文件支持
 
 ## ⚠️ 注意事项
 
 1. 确保已正确设置 `DEEPSEEK_API_KEY` 环境变量
 2. 网络连接需要能够访问 DeepSeek API
 3. 使用 `Ctrl+C` 可以随时退出程序
+4. 流式输出需要终端支持实时字符显示
+
+## 📚 详细文档
+
+更多使用技巧和高级功能请参考 [USAGE.md](USAGE.md)
 
 ## 🤝 贡献
 
 欢迎提交 Issue 和 Pull Request 来帮助改进这个项目！
-
 
 ---
 
